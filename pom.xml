@@ -9,6 +9,17 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <name>Crypto Trading SDK</name>
+  <description>SDK for crypto trading operations on the popular platforms</description>
+
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
