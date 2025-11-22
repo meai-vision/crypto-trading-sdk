@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.meaivision</groupId>
+    <artifactId>crypto-trading-sdk</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.meaivision.crypto-trading-sdk</groupId>
+  <artifactId>binance</artifactId>
+  <packaging>jar</packaging>
+
+  <properties>
+    <binance-connector.version>3.4.1</binance-connector.version>
+    <binance-futures-connector.version>3.0.5</binance-futures-connector.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.meaivision.crypto-trading-sdk</groupId>
+      <artifactId>base</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.binance</groupId>
+      <artifactId>binance-connector-java</artifactId>
+      <version>${binance-connector.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.binance</groupId>
+      <artifactId>binance-futures-connector-java</artifactId>
+      <version>${binance-futures-connector.version}</version>
+    </dependency>
+  </dependencies>
+
+</project>
