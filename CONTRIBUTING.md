@@ -65,6 +65,8 @@ All commits must begin with a task identifier:
 3. PR titles must contain the same identifier used in commits.
 4. Code must build successfully and pass all tests.
 5. Add or update Javadoc when modifying or introducing important logic.
+6. **Assign yourself** to your PR so reviewers know the owner. 
+7. **Add at least one existing label** to your PR to classify its purpose.
 
 ## Issues
 
