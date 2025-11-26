@@ -60,6 +60,13 @@ You can include the SDK in any standard Java application using Maven or Gradle.
     ```
 3. Reload/resync maven in your project.
 
+## 🤝 Contributing
+
+We welcome contributions from both platform developers and external contributors.
+Please read our **[Contributing Guidelines](./CONTRIBUTING.md)** before creating branches, commits, or pull requests.
+The guidelines describe coding style, branch naming rules, commit conventions, Javadoc requirements, and the workflow for submitting changes.
+
+
 ## 📄 License
 
 Copyright 2025 MEAI VISION
