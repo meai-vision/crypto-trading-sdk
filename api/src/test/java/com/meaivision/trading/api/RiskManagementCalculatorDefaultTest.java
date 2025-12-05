@@ -1,8 +1,8 @@
-package com.meaivision.trading.base;
+package com.meaivision.trading.api;
 
 import com.meaivision.trading.base.model.RiskManagementLimit;
 import com.meaivision.trading.base.service.RiskManagementCalculator;
-import com.meaivision.trading.core.RiskManagementCalculatorDefault;
+import com.meaivision.trading.api.RiskManagementCalculatorDefault;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -6,7 +6,7 @@
 
   <groupId>com.meaivision</groupId>
   <artifactId>crypto-trading-sdk</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <licenses>
@@ -34,7 +34,7 @@
   <modules>
     <module>base</module>
     <module>binance</module>
-    <module>core</module>
+    <module>api</module>
   </modules>
 
   <dependencies>
