@@ -12,5 +12,4 @@ public class TradingContext {
   private BigDecimal price;
   private MarketDirection marketDirection;
   private RiskValues riskValues;
-  private int quantityPrecision;
 }

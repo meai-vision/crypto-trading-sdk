@@ -1,10 +1,10 @@
-package com.meaivision.trading.base.model;
+package com.meaivision.trading.binance.model;
 
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class FuturesOrderResponse {
+public class BinanceFuturesOrder {
   private Long id;
   private String clientOrderId;
   private String cumQty;
