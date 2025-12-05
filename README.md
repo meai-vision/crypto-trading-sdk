@@ -54,7 +54,7 @@ You can include the SDK in any standard Java application using Maven or Gradle.
     ```xml
     <dependency>
         <groupId>com.meaivision.crypto-trading-sdk</groupId>
-        <artifactId>core</artifactId>
+        <artifactId>api</artifactId>
         <version>0.0.2-SNAPSHOT</version>
     </dependency>
     ```
