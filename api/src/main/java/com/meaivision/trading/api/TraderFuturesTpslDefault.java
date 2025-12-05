@@ -1,4 +1,4 @@
-package com.meaivision.trading.core;
+package com.meaivision.trading.api;
 
 import com.meaivision.trading.base.model.AccountInfo;
 import com.meaivision.trading.base.model.FuturesOrderRequest;
