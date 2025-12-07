@@ -5,7 +5,6 @@
 
 
 [![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.2-orange?style=flat-square)](https://github.com/meai-vision/crypto-trading-sdk/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 **A powerful, unified, and type-safe SDK for crypto trading.**
