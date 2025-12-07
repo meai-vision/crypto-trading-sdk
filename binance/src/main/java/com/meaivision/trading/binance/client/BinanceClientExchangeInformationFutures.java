@@ -1,5 +1,6 @@
 package com.meaivision.trading.binance.client;
 
+import com.binance.connector.futures.client.enums.DefaultUrls;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -7,12 +8,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-public class ClientExchangeInformationFutures {
-
-  private static final String BINANCE_FUTURES_HOST = "https://fapi.binance.com";
+public class BinanceClientExchangeInformationFutures {
 
   public String getExchangeInformation() {
-    String url = BINANCE_FUTURES_HOST + "/fapi/v1/exchangeInfo";
+    String url = DefaultUrls.USDM_PROD_URL + "/fapi/v1/exchangeInfo";
     HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 

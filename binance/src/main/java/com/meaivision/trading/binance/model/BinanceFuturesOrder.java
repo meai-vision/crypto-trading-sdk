@@ -1,11 +1,10 @@
 package com.meaivision.trading.binance.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.Data;
 
 @Data
 public class BinanceFuturesOrder {
-  private Long id;
   private String clientOrderId;
   private String cumQty;
   private String cumQuote;
@@ -26,13 +25,10 @@ public class BinanceFuturesOrder {
   private String origType;
   private String activatePrice;
   private String priceRate;
-  private long updateTime;
+  private Instant updateTime;
   private String workingType;
   private boolean priceProtect;
   private String priceMatch;
   private String selfTradePreventionMode;
   private long goodTillDate;
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
-  private boolean isDeleted = false;
 }

@@ -8,6 +8,7 @@ import com.meaivision.trading.base.model.LeverageResponse;
 import com.meaivision.trading.base.model.TradingClientSettings;
 import com.meaivision.trading.base.service.ClientProvider;
 import com.meaivision.trading.base.service.LeverageService;
+import com.meaivision.trading.binance.exception.BinanceException;
 import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +30,7 @@ public class BinanceLeverageService implements LeverageService<LeverageRequest, 
     parameters.put("symbol", request.getSymbol());
     parameters.put("leverage", request.getLeverage());
     String string = sendRequest(request, futuresClient, parameters);
-    return new LeverageResponse();
+    return new LeverageResponse(); // TODO: realize
   }
 
   private String sendRequest(
@@ -41,7 +42,7 @@ public class BinanceLeverageService implements LeverageService<LeverageRequest, 
       log.debug(result);
       return result;
     } catch (BinanceConnectorException | BinanceClientException e) {
-      throw new RuntimeException(
+      throw new BinanceException(
           "Error occurred during changing initial leverage for " + request.getSymbol(), e);
     }
   }

@@ -2,10 +2,11 @@ package com.meaivision.trading.binance.client;
 
 import com.binance.connector.futures.client.FuturesClient;
 import com.binance.connector.futures.client.impl.UMFuturesClientImpl;
-import com.meaivision.trading.base.service.ClientProvider;
 import com.meaivision.trading.base.model.TradingClientSettings;
+import com.meaivision.trading.base.service.ClientProvider;
 
-public class ClientProviderFutures implements ClientProvider<TradingClientSettings, FuturesClient> {
+public class BinanceClientProviderFutures
+    implements ClientProvider<TradingClientSettings, FuturesClient> {
 
   @Override
   public FuturesClient get(TradingClientSettings properties) {

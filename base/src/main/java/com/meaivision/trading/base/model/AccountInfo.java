@@ -6,8 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode
 @ToString
+@EqualsAndHashCode
 public class AccountInfo {
   private BigDecimal availableBalance;
   private BigDecimal totalWalletBalance;

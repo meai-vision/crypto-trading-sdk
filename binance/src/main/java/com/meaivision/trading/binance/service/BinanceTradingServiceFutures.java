@@ -3,116 +3,81 @@ package com.meaivision.trading.binance.service;
 import com.binance.connector.futures.client.FuturesClient;
 import com.binance.connector.futures.client.exceptions.BinanceClientException;
 import com.binance.connector.futures.client.exceptions.BinanceConnectorException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meaivision.trading.binance.BinanceConstants;
-import com.meaivision.trading.base.service.ClientProvider;
-import com.meaivision.trading.base.service.TradingServiceFutures;
 import com.meaivision.trading.base.model.FuturesOrder;
 import com.meaivision.trading.base.model.FuturesOrderRequest;
 import com.meaivision.trading.base.model.TradingClientSettings;
-import java.util.ArrayList;
+import com.meaivision.trading.base.service.ClientProvider;
+import com.meaivision.trading.base.service.TradingServiceFutures;
+import com.meaivision.trading.base.util.JsonUtils;
+import com.meaivision.trading.binance.BinanceConstants;
+import com.meaivision.trading.binance.exception.BinanceException;
+import com.meaivision.trading.binance.model.BinanceFuturesOrder;
+import com.meaivision.trading.binance.model.mapper.BinanceFuturesOrderMapper;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.StreamSupport;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BinanceTradingServiceFutures implements TradingServiceFutures {
 
-  private final ObjectMapper objectMapper;
+  private final BinanceFuturesOrderMapper binanceFuturesOrderMapper;
   private final ClientProvider<TradingClientSettings, FuturesClient> clientProvider;
 
   public BinanceTradingServiceFutures(
-      ObjectMapper objectMapper,
+      BinanceFuturesOrderMapper binanceFuturesOrderMapper,
       ClientProvider<TradingClientSettings, FuturesClient> clientProvider) {
-    this.objectMapper = objectMapper;
+    this.binanceFuturesOrderMapper = binanceFuturesOrderMapper;
     this.clientProvider = clientProvider;
   }
 
   @Override
   public List<FuturesOrder> queryAllOrdersForSymbol(String symbol, TradingClientSettings settings) {
-    FuturesClient client = clientProvider.get(settings);
-
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
     parameters.put(BinanceConstants.PARAM_SYMBOL, symbol);
-
-    String result = null;
+    FuturesClient client = clientProvider.get(settings);
     try {
-      result = client.account().allOrders(parameters);
-      log.debug(result);
-    } catch (BinanceConnectorException e) {
-      log.error("fullErrMessage: {}", e.getMessage(), e);
-    } catch (BinanceClientException e) {
-      log.error(
-          "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-          e.getMessage(),
-          e.getErrMsg(),
-          e.getErrorCode(),
-          e.getHttpStatusCode(),
-          e);
+      String result = client.account().allOrders(parameters);
+      log.debug("Orders for symbol result: {}", result);
+      return getMultipleFuturesOrderResponse(result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException("Can't find all futures orders for symbol " + symbol, e);
     }
-
-    return getMultipleFuturesOrderResponse(result);
   }
 
   @Override
   public FuturesOrder createOrder(FuturesOrderRequest request, TradingClientSettings settings) {
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-
-    FuturesClient client = clientProvider.get(settings);
-
     parameters.put(BinanceConstants.PARAM_SYMBOL, request.getSymbol());
     parameters.put(BinanceConstants.PARAM_SIDE, request.getSide());
     parameters.put(BinanceConstants.PARAM_TYPE, request.getType());
-
     if (request.getStopPrice() != null) {
       parameters.put(BinanceConstants.PARAM_STOP_PRICE, request.getStopPrice());
     }
     parameters.put(BinanceConstants.PARAM_QUANTITY, request.getQuantity());
-
-    String result = null;
+    FuturesClient client = clientProvider.get(settings);
     try {
-      result = client.account().newOrder(parameters);
-      log.debug(result);
-    } catch (BinanceConnectorException e) {
-      log.error("fullErrMessage: {}", e.getMessage(), e);
-    } catch (BinanceClientException e) {
-      log.error(
-          "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-          e.getMessage(),
-          e.getErrMsg(),
-          e.getErrorCode(),
-          e.getHttpStatusCode(),
-          e);
+      String result = client.account().newOrder(parameters);
+      log.debug("Order creation result: {}", result);
+      return getFuturesOrderResponse(result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException("Can't create futures order " + request, e);
     }
-
-    return getFuturesOrderResponse(result);
   }
 
   @Override
   public void closeOrder(Long orderId, String symbol, TradingClientSettings settings) {
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-
-    FuturesClient client = clientProvider.get(settings);
-
     parameters.put("symbol", symbol);
     parameters.put("orderId", orderId);
-
-    String result = null;
+    FuturesClient client = clientProvider.get(settings);
     try {
-      result = client.account().cancelOrder(parameters);
-      log.debug(result);
-    } catch (BinanceConnectorException e) {
-      log.error("fullErrMessage: {}", e.getMessage(), e);
-    } catch (BinanceClientException e) {
-      log.error(
-          "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-          e.getMessage(),
-          e.getErrMsg(),
-          e.getErrorCode(),
-          e.getHttpStatusCode(),
-          e);
+      String result = client.account().cancelOrder(parameters);
+      log.debug("Closing order result: {}", result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException(
+          "Can't close futures order by ID '%d' for symbol '%s'".formatted(orderId, symbol), e);
     }
   }
 
@@ -120,91 +85,46 @@ public class BinanceTradingServiceFutures implements TradingServiceFutures {
   public void closeMultipleOrder(
       List<Long> orderIds, String symbol, TradingClientSettings settings) {
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-
-    FuturesClient client = clientProvider.get(settings);
-
-    String value = null;
-    try {
-      value = objectMapper.writeValueAsString(orderIds);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
-
+    String orderIdList = JsonUtils.convertToJson(orderIds);
     parameters.put("symbol", symbol);
-    parameters.put("orderIdList", value);
-
-    String result = null;
+    parameters.put("orderIdList", orderIdList);
+    FuturesClient client = clientProvider.get(settings);
     try {
-      result = client.account().cancelMultipleOrders(parameters);
-      log.debug(result);
-    } catch (BinanceConnectorException e) {
-      log.error("fullErrMessage: {}", e.getMessage(), e);
-    } catch (BinanceClientException e) {
-      log.error(
-          "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-          e.getMessage(),
-          e.getErrMsg(),
-          e.getErrorCode(),
-          e.getHttpStatusCode(),
-          e);
+      String result = client.account().cancelMultipleOrders(parameters);
+      log.debug("Closing multiple orders result: {}", result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException("Can't close multiple futures orders by IDs: " + orderIdList, e);
     }
   }
 
   @Override
   public void closeAllOpenOrdersForSymbol(String symbol, TradingClientSettings settings) {
-
-    FuturesClient client = clientProvider.get(settings);
-
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
     parameters.put("symbol", symbol);
-
-    String result = null;
+    FuturesClient client = clientProvider.get(settings);
     try {
-      result = client.account().cancelAllOpenOrders(parameters);
-      log.debug(result);
-    } catch (BinanceConnectorException e) {
-      log.error("fullErrMessage: {}", e.getMessage(), e);
-    } catch (BinanceClientException e) {
-      log.error(
-          "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-          e.getMessage(),
-          e.getErrMsg(),
-          e.getErrorCode(),
-          e.getHttpStatusCode(),
-          e);
+      String result = client.account().cancelAllOpenOrders(parameters);
+      log.debug("Close all order for symbol results: {}", result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException("Can't close all open futures orders for symbol " + symbol, e);
     }
-
-    // todo: add database deleting
   }
 
   private List<FuturesOrder> getMultipleFuturesOrderResponse(String result) {
-    JsonNode jsonNode = null;
-    try {
-      jsonNode = objectMapper.readTree(result);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("Can't process Binance response!", e);
-    }
-
-    List<FuturesOrder> responses = new ArrayList<>();
-    for (JsonNode node : jsonNode) {
-      FuturesOrder futuresOrderByNode = getFuturesOrderResponseByNode(node);
-      responses.add(futuresOrderByNode);
-    }
-    return responses;
+    JsonNode jsonNode = JsonUtils.convertToJsonTree(result);
+    return StreamSupport.stream(jsonNode.spliterator(), false)
+        .map(this::getFuturesOrderResponseByNode)
+        .toList();
   }
 
   private FuturesOrder getFuturesOrderResponse(String result) {
-    JsonNode jsonNode = null;
-    try {
-      jsonNode = objectMapper.readTree(result);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException("Can't process Binance response!", e);
-    }
+    JsonNode jsonNode = JsonUtils.convertToJsonTree(result);
     return getFuturesOrderResponseByNode(jsonNode);
   }
 
   private FuturesOrder getFuturesOrderResponseByNode(JsonNode jsonNode) {
-    FuturesOrder futuresOrder = objectMapper.convertValue(jsonNode, FuturesOrder.class);
-    return futuresOrder;
+    BinanceFuturesOrder binanceFuturesOrder =
+        JsonUtils.convertToObject(jsonNode, BinanceFuturesOrder.class);
+    return binanceFuturesOrderMapper.toModel(binanceFuturesOrder);
   }
 }

@@ -3,152 +3,115 @@ package com.meaivision.trading.binance.service;
 import com.binance.connector.client.SpotClient;
 import com.binance.connector.futures.client.exceptions.BinanceClientException;
 import com.binance.connector.futures.client.exceptions.BinanceConnectorException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meaivision.trading.binance.BinanceConstants;
-import com.meaivision.trading.base.service.ClientProvider;
-import com.meaivision.trading.base.service.TradingServiceSpot;
 import com.meaivision.trading.base.model.SpotOrder;
 import com.meaivision.trading.base.model.SpotOrderRequest;
 import com.meaivision.trading.base.model.TradingClientSettings;
+import com.meaivision.trading.base.service.ClientProvider;
+import com.meaivision.trading.base.service.TradingServiceSpot;
 import com.meaivision.trading.base.util.JsonUtils;
-import java.util.ArrayList;
+import com.meaivision.trading.binance.BinanceConstants;
+import com.meaivision.trading.binance.exception.BinanceException;
+import com.meaivision.trading.binance.model.BinanceSpotOrder;
+import com.meaivision.trading.binance.model.mapper.BinanceSpotOrderMapper;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.StreamSupport;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BinanceTradingServiceSpot implements TradingServiceSpot {
 
-  private final ObjectMapper objectMapper;
+  private final BinanceSpotOrderMapper binanceSpotOrderMapper;
   private final ClientProvider<TradingClientSettings, SpotClient> clientProvider;
 
   public BinanceTradingServiceSpot(
-      ObjectMapper objectMapper, ClientProvider<TradingClientSettings, SpotClient> clientProvider) {
-    this.objectMapper = objectMapper;
+      BinanceSpotOrderMapper binanceSpotOrderMapper,
+      ClientProvider<TradingClientSettings, SpotClient> clientProvider) {
+    this.binanceSpotOrderMapper = binanceSpotOrderMapper;
     this.clientProvider = clientProvider;
   }
 
   @Override
   public List<SpotOrder> queryAllOrdersForSymbol(String symbol, TradingClientSettings settings) {
-    SpotClient spotClient = clientProvider.get(settings);
-
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
     parameters.put(BinanceConstants.PARAM_SYMBOL, symbol);
-
-    String spotOrdersBySymbol = spotClient.createTrade().myTrades(parameters);
-    JsonNode spotOrdersNode = JsonUtils.convertToJsonTree(spotOrdersBySymbol);
-
-    List<SpotOrder> spotOrders = new ArrayList<>();
-    spotOrdersNode.forEach(
-        orderNode -> {
-          SpotOrder spotOrder = JsonUtils.convertToObject(orderNode, SpotOrder.class);
-          spotOrders.add(spotOrder);
-        });
-
-    return spotOrders;
+    SpotClient spotClient = clientProvider.get(settings);
+    try {
+      String spotOrdersBySymbol = spotClient.createTrade().myTrades(parameters);
+      JsonNode spotOrdersNode = JsonUtils.convertToJsonTree(spotOrdersBySymbol);
+      return StreamSupport.stream(spotOrdersNode.spliterator(), false)
+          .map(this::mapToModel)
+          .toList();
+    } catch (BinanceClientException | BinanceConnectorException e) {
+      throw new BinanceException("Can't query all spot orders for symbol " + symbol, e);
+    }
   }
 
   @Override
   public SpotOrder createOrder(SpotOrderRequest request, TradingClientSettings settings) {
-    SpotClient spotClient = clientProvider.get(settings);
-
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
     parameters.put(BinanceConstants.PARAM_SYMBOL, request.getSymbol());
     parameters.put(BinanceConstants.PARAM_SIDE, request.getSide());
     parameters.put(BinanceConstants.PARAM_TYPE, request.getType());
-
-    String newOrder = spotClient.createTrade().newOrder(parameters);
-    JsonNode newOrderNode = JsonUtils.convertToJsonTree(newOrder);
-    SpotOrder spotOrder = JsonUtils.convertToObject(newOrderNode, SpotOrder.class);
-    return spotOrder;
+    SpotClient spotClient = clientProvider.get(settings);
+    try {
+      String newOrder = spotClient.createTrade().newOrder(parameters);
+      JsonNode newOrderNode = JsonUtils.convertToJsonTree(newOrder);
+      return mapToModel(newOrderNode);
+    } catch (BinanceClientException | BinanceConnectorException e) {
+      throw new BinanceException("Can't create spot order " + request, e);
+    }
   }
 
   @Override
   public void closeOrder(Long orderId, String symbol, TradingClientSettings settings) {
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-
-    SpotClient client = clientProvider.get(settings);
-
     parameters.put("symbol", symbol);
     parameters.put("orderId", orderId);
-
-    String result = null;
+    SpotClient client = clientProvider.get(settings);
     try {
-      result = client.createTrade().cancelOrder(parameters);
-      log.debug(result);
-    } catch (BinanceConnectorException e) {
-      log.error("fullErrMessage: {}", e.getMessage(), e);
-    } catch (BinanceClientException e) {
-      log.error(
-          "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-          e.getMessage(),
-          e.getErrMsg(),
-          e.getErrorCode(),
-          e.getHttpStatusCode(),
-          e);
+      String result = client.createTrade().cancelOrder(parameters);
+      log.debug("Spot order closing result: {}", result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException(
+          "Can't close spot order for order ID '%d' and symbol '%s'".formatted(orderId, symbol), e);
     }
   }
 
   @Override
   public void closeMultipleOrder(
       List<Long> orderIds, String symbol, TradingClientSettings settings) {
-
+    String ids = JsonUtils.convertToJson(orderIds);
+    LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
+    parameters.put("symbol", symbol);
+    parameters.put("orderIdList", ids);
     SpotClient client = clientProvider.get(settings);
-
-    orderIds.forEach(
-        orderId -> {
-          String value = null;
-          try {
-            value = objectMapper.writeValueAsString(orderIds);
-          } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-          }
-
-          LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
-          parameters.put("symbol", symbol);
-          parameters.put("orderIdList", value);
-
-          String result = null;
-          try {
-            result = client.createTrade().cancelOrder(parameters);
-            log.debug(result);
-          } catch (BinanceConnectorException e) {
-            log.error("fullErrMessage: {}", e.getMessage(), e);
-          } catch (BinanceClientException e) {
-            log.error(
-                "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-                e.getMessage(),
-                e.getErrMsg(),
-                e.getErrorCode(),
-                e.getHttpStatusCode(),
-                e);
-          }
-        });
+    try {
+      String result = client.createTrade().cancelOrder(parameters);
+      log.debug("Closing spor orders result: {}", result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException(
+          "Can't close multiple spot orders by IDs: %s for symbol %s".formatted(ids, symbol), e);
+    }
   }
 
   @Override
   public void closeAllOpenOrdersForSymbol(String symbol, TradingClientSettings settings) {
-    SpotClient client = clientProvider.get(settings);
-
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
     parameters.put("symbol", symbol);
-
-    String result = null;
+    SpotClient client = clientProvider.get(settings);
     try {
-      result = client.createTrade().cancelOpenOrders(parameters);
-      log.debug(result);
-    } catch (BinanceConnectorException e) {
-      log.error("fullErrMessage: {}", e.getMessage(), e);
-    } catch (BinanceClientException e) {
-      log.error(
-          "fullErrMessage: {} \nerrMessage: {} \nerrCode: {} \nHTTPStatusCode: {}",
-          e.getMessage(),
-          e.getErrMsg(),
-          e.getErrorCode(),
-          e.getHttpStatusCode(),
-          e);
+      String result = client.createTrade().cancelOpenOrders(parameters);
+      log.debug("Closing all spot orders for symbol result: {}", result);
+    } catch (BinanceConnectorException | BinanceClientException e) {
+      throw new BinanceException("Can't close all open spot orders for symbol " + symbol, e);
     }
+  }
+
+  private SpotOrder mapToModel(JsonNode newOrderNode) {
+    BinanceSpotOrder binanceSpotOrder =
+        JsonUtils.convertToObject(newOrderNode, BinanceSpotOrder.class);
+    return binanceSpotOrderMapper.toModel(binanceSpotOrder);
   }
 }

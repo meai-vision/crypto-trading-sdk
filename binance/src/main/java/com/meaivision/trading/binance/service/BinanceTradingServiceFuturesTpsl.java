@@ -11,12 +11,14 @@ import com.meaivision.trading.base.service.TradingServiceFutures;
 import com.meaivision.trading.base.service.TradingServiceFuturesTpsl;
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class BinanceTradingServiceFuturesTpsl implements TradingServiceFuturesTpsl {
 
   private final TradingServiceFutures tradingServiceFutures;
+
+  public BinanceTradingServiceFuturesTpsl(TradingServiceFutures tradingServiceFutures) {
+    this.tradingServiceFutures = tradingServiceFutures;
+  }
 
   @Override
   public FuturesTpslOrder createTpslOrder(
@@ -53,7 +55,7 @@ public class BinanceTradingServiceFuturesTpsl implements TradingServiceFuturesTp
       invertedSideType = SideType.BUY;
     }
 
-    BigDecimal quantity = BigDecimal.valueOf(Double.parseDouble(mainOrder.getOrigQty()));
+    BigDecimal quantity = BigDecimal.valueOf(Double.parseDouble(mainOrder.getQuantity()));
 
     FuturesOrderRequest orderRequest =
         FuturesOrderRequest.builder()
@@ -64,7 +66,8 @@ public class BinanceTradingServiceFuturesTpsl implements TradingServiceFuturesTp
             .build();
 
     tradingServiceFutures.createOrder(orderRequest, settings);
-    List<Long> ids = List.of(stopLossOrder.getOrderId(), takeProfitOrder.getOrderId());
+    List<Long> ids =
+        List.of(Long.valueOf(stopLossOrder.getId()), Long.valueOf(takeProfitOrder.getId()));
     tradingServiceFutures.closeMultipleOrder(ids, mainOrder.getSymbol(), settings);
   }
 }

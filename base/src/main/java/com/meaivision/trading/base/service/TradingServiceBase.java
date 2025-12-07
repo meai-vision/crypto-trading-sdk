@@ -1,8 +1,8 @@
 package com.meaivision.trading.base.service;
 
+import com.meaivision.trading.base.model.TradingClientSettings;
 import com.meaivision.trading.base.model.fundamental.OrderRequest;
 import com.meaivision.trading.base.model.fundamental.OrderResponse;
-import com.meaivision.trading.base.model.TradingClientSettings;
 import java.util.List;
 
 public interface TradingServiceBase<

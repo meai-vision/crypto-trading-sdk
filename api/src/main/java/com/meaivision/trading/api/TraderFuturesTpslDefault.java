@@ -116,10 +116,15 @@ public class TraderFuturesTpslDefault implements TraderFuturesTpsl {
     AccountInfo accountInfo = accountService.getAccountInfo(settings);
     BigDecimal availableBalance = accountInfo.getAvailableBalance();
     BigDecimal price = tradingContext.getPrice();
+    String ticker = tradingContext.getTicker();
     List<ExchangeInfo> symbolsInformation =
         exchangeInformationServiceFutures.getSymbolsInformation();
-    int quantityPrecision = 0; // TODO change
-    String ticker         = tradingContext.getTicker();
+    ExchangeInfo exchangeInfo =
+        symbolsInformation.stream()
+            .filter(s -> s.getSymbol().equalsIgnoreCase(ticker))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Can't find precision for " + ticker));
+    int quantityPrecision = exchangeInfo.getQuantityPrecision();
     RiskValues riskValues = tradingContext.getRiskValues();
     int leverage = riskValues.getLeverage();
     BigDecimal firstPriceChangeIndex = riskValues.getFirstPriceChangeIndex();
