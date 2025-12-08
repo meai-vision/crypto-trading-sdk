@@ -1,8 +1,7 @@
 package com.meaivision.trading.base.model;
 
-import java.math.BigDecimal;
-
 import com.meaivision.trading.base.model.fundamental.OrderRequest;
+import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

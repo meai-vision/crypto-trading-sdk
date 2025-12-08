@@ -24,7 +24,8 @@ Keep the flow readable. Use intermediate variables or extract logic into separat
 
 ### Javadoc Requirements
 
-Interfaces and classes that contain important decision-making logic, non-obvious behaviour, or domain-specific details **must be documented using Javadoc**.
+Interfaces and classes that contain important decision-making logic, non-obvious behaviour, or domain-specific details *
+*must be documented using Javadoc**.
 Explain *why* something works the way it does, not just *what* it does.
 This helps contributors understand the intent behind critical mechanisms in the SDK.
 
@@ -40,6 +41,7 @@ Project versions are maintained in the `<properties>` section of the `pom.xml`.
 * `bug/[PROJECT_ABBR]-[TASK_NUMBER]`
 
 Where:
+
 - `PROJECT_ABBR` is an abbreviation of the project you work in
 - `TASK_NUMBER` is a number of task you work on
 
@@ -65,7 +67,7 @@ All commits must begin with a task identifier:
 3. PR titles must contain the same identifier used in commits.
 4. Code must build successfully and pass all tests.
 5. Add or update Javadoc when modifying or introducing important logic.
-6. **Assign yourself** to your PR so reviewers know the owner. 
+6. **Assign yourself** to your PR so reviewers know the owner.
 7. **Add at least one existing label** to your PR to classify its purpose.
 
 ## Issues

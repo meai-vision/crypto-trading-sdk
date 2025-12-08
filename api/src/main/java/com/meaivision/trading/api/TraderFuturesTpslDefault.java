@@ -1,6 +1,7 @@
 package com.meaivision.trading.api;
 
 import com.meaivision.trading.base.model.AccountInfo;
+import com.meaivision.trading.base.model.ExchangeInfo;
 import com.meaivision.trading.base.model.FuturesOrderRequest;
 import com.meaivision.trading.base.model.FuturesTpslOrder;
 import com.meaivision.trading.base.model.FuturesTpslOrderRequest;
@@ -12,24 +13,29 @@ import com.meaivision.trading.base.model.enums.MarketDirection;
 import com.meaivision.trading.base.model.enums.OrderType;
 import com.meaivision.trading.base.model.enums.SideType;
 import com.meaivision.trading.base.service.AccountService;
+import com.meaivision.trading.base.service.ExchangeInformationServiceFutures;
 import com.meaivision.trading.base.service.RiskManagementCalculator;
 import com.meaivision.trading.base.service.TradingServiceFuturesTpsl;
 import com.meaivision.trading.base.trader.TraderFuturesTpsl;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class TraderFuturesTpslDefault implements TraderFuturesTpsl {
 
   private final TradingServiceFuturesTpsl futuresTpslTradingService;
   private final RiskManagementCalculator riskManagementCalculator;
   private final AccountService<AccountInfo> accountService;
+  private final ExchangeInformationServiceFutures exchangeInformationServiceFutures;
 
   public TraderFuturesTpslDefault(
       TradingServiceFuturesTpsl futuresTpslTradingService,
       RiskManagementCalculator riskManagementCalculator,
-      AccountService<AccountInfo> accountService) {
+      AccountService<AccountInfo> accountService,
+      ExchangeInformationServiceFutures exchangeInformationServiceFutures) {
     this.futuresTpslTradingService = futuresTpslTradingService;
     this.riskManagementCalculator = riskManagementCalculator;
     this.accountService = accountService;
+    this.exchangeInformationServiceFutures = exchangeInformationServiceFutures;
   }
 
   @Override
@@ -110,8 +116,15 @@ public class TraderFuturesTpslDefault implements TraderFuturesTpsl {
     AccountInfo accountInfo = accountService.getAccountInfo(settings);
     BigDecimal availableBalance = accountInfo.getAvailableBalance();
     BigDecimal price = tradingContext.getPrice();
-    int quantityPrecision = tradingContext.getQuantityPrecision();
     String ticker = tradingContext.getTicker();
+    List<ExchangeInfo> symbolsInformation =
+        exchangeInformationServiceFutures.getSymbolsInformation();
+    ExchangeInfo exchangeInfo =
+        symbolsInformation.stream()
+            .filter(s -> s.getSymbol().equalsIgnoreCase(ticker))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Can't find precision for " + ticker));
+    int quantityPrecision = exchangeInfo.getQuantityPrecision();
     RiskValues riskValues = tradingContext.getRiskValues();
     int leverage = riskValues.getLeverage();
     BigDecimal firstPriceChangeIndex = riskValues.getFirstPriceChangeIndex();

@@ -5,7 +5,6 @@
 
 
 [![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.2-orange?style=flat-square)](https://github.com/meai-vision/crypto-trading-sdk/releases)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 **A powerful, unified, and type-safe SDK for crypto trading.**
@@ -25,9 +24,12 @@
 
 ## 🚀 Overview
 
-**Crypto Trading SDK** allows developers to easily connect to multiple cryptocurrency exchanges through a single, unified interface. Designed with performance and reliability in mind, it simplifies the complexity of managing API keys, order execution.
+**Crypto Trading SDK** allows developers to easily connect to multiple cryptocurrency exchanges through a single,
+unified interface. Designed with performance and reliability in mind, it simplifies the complexity of managing API keys,
+order execution.
 
-Whether you are building an AI-driven trading bot, a portfolio tracker, or an arbitrage tool, this SDK provides the building blocks you need.
+Whether you are building an AI-driven trading bot, a portfolio tracker, or an arbitrage tool, this SDK provides the
+building blocks you need.
 
 ## ✨ Key Features
 
@@ -41,7 +43,8 @@ Before you begin, ensure you have met the following requirements:
 
 * **Java 21** or higher: This SDK utilizes modern Java features (Records, Pattern Matching, Virtual Threads).
 * **Stable Internet Connection**: Critical for maintaining WebSocket connections and executing low-latency trades.
-* **No Framework Required**: This is a standalone Java library. It does **not** require Spring Boot or any heavy containers to run.
+* **No Framework Required**: This is a standalone Java library. It does **not** require Spring Boot or any heavy
+  containers to run.
 
 ## 📦 Installation
 
@@ -55,7 +58,7 @@ You can include the SDK in any standard Java application using Maven or Gradle.
     <dependency>
         <groupId>com.meaivision.crypto-trading-sdk</groupId>
         <artifactId>api</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
     </dependency>
     ```
 3. Reload/resync maven in your project.
@@ -64,8 +67,8 @@ You can include the SDK in any standard Java application using Maven or Gradle.
 
 We welcome contributions from both platform developers and external contributors.
 Please read our **[Contributing Guidelines](./CONTRIBUTING.md)** before creating branches, commits, or pull requests.
-The guidelines describe coding style, branch naming rules, commit conventions, Javadoc requirements, and the workflow for submitting changes.
-
+The guidelines describe coding style, branch naming rules, commit conventions, Javadoc requirements, and the workflow
+for submitting changes.
 
 ## 📄 License
 

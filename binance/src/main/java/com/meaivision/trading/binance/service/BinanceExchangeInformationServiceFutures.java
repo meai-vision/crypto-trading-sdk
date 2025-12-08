@@ -5,27 +5,29 @@ import com.meaivision.trading.base.model.ExchangeInfo;
 import com.meaivision.trading.base.service.ClientProvider;
 import com.meaivision.trading.base.service.ExchangeInformationServiceFutures;
 import com.meaivision.trading.base.util.JsonUtils;
-import com.meaivision.trading.binance.client.ClientExchangeInformationFutures;
+import com.meaivision.trading.binance.client.BinanceClientExchangeInformationFutures;
+import com.meaivision.trading.binance.exception.BinanceException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 public class BinanceExchangeInformationServiceFutures implements ExchangeInformationServiceFutures {
 
-  private final ClientProvider<Optional<Object>, ClientExchangeInformationFutures> clientProvider;
+  private final ClientProvider<Optional<Object>, BinanceClientExchangeInformationFutures>
+      clientProvider;
 
   public BinanceExchangeInformationServiceFutures(
-      ClientProvider<Optional<Object>, ClientExchangeInformationFutures> clientProvider) {
+      ClientProvider<Optional<Object>, BinanceClientExchangeInformationFutures> clientProvider) {
     this.clientProvider = clientProvider;
   }
 
   @Override
   public List<ExchangeInfo> getSymbolsInformation() {
-    ClientExchangeInformationFutures client = clientProvider.get(Optional.empty());
+    BinanceClientExchangeInformationFutures client = clientProvider.get(Optional.empty());
     String response = client.getExchangeInformation();
     JsonNode symbolsNode = getSymbols(response);
     if (symbolsNode == null) {
-      throw new RuntimeException("Can't find exchange information for symbols!");
+      throw new BinanceException("Can't find exchange information for symbols!");
     }
     return StreamSupport.stream(symbolsNode.spliterator(), true)
         .map(node -> JsonUtils.convertToObject(node, ExchangeInfo.class))
