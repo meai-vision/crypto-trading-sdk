@@ -36,6 +36,7 @@
     <module>base</module>
     <module>binance</module>
     <module>api</module>
+      <module>bybit</module>
   </modules>
 
   <dependencies>

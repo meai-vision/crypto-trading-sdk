@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.meaivision</groupId>
+        <artifactId>crypto-trading-sdk</artifactId>
+        <version>0.0.3-SNAPSHOT</version>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>com.meaivision.crypto-trading-sdk</groupId>
+            <artifactId>base</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.wuhewuhe</groupId>
+            <artifactId>bybit-java-api</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+    </dependencies>
+    <artifactId>bybit</artifactId>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+</project>
