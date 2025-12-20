@@ -17,12 +17,12 @@ import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BinanceAccountService implements AccountService<AccountInfo> {
+public class BinanceAccountServiceFutures implements AccountService<AccountInfo> {
 
   private final BinanceAccountInfoMapper binanceAccountInfoMapper;
   private final ClientProvider<TradingClientSettings, FuturesClient> clientProvider;
 
-  public BinanceAccountService(
+  public BinanceAccountServiceFutures(
       BinanceAccountInfoMapper binanceAccountInfoMapper,
       ClientProvider<TradingClientSettings, FuturesClient> clientProvider) {
     this.binanceAccountInfoMapper = binanceAccountInfoMapper;
