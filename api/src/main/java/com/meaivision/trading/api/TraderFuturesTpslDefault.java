@@ -1,6 +1,6 @@
 package com.meaivision.trading.api;
 
-import com.meaivision.trading.base.model.AccountInfo;
+import com.meaivision.trading.base.model.AccountInfoFutures;
 import com.meaivision.trading.base.model.ExchangeInfo;
 import com.meaivision.trading.base.model.FuturesOrderRequest;
 import com.meaivision.trading.base.model.FuturesTpslOrder;
@@ -17,6 +17,7 @@ import com.meaivision.trading.base.service.ExchangeInformationServiceFutures;
 import com.meaivision.trading.base.service.RiskManagementCalculator;
 import com.meaivision.trading.base.service.TradingServiceFuturesTpsl;
 import com.meaivision.trading.base.trader.TraderFuturesTpsl;
+import com.meaivision.trading.binance.model.BinanceAccountInfoFutures;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -24,13 +25,13 @@ public class TraderFuturesTpslDefault implements TraderFuturesTpsl {
 
   private final TradingServiceFuturesTpsl futuresTpslTradingService;
   private final RiskManagementCalculator riskManagementCalculator;
-  private final AccountService<AccountInfo> accountService;
+  private final AccountService<BinanceAccountInfoFutures> accountService;
   private final ExchangeInformationServiceFutures exchangeInformationServiceFutures;
 
   public TraderFuturesTpslDefault(
       TradingServiceFuturesTpsl futuresTpslTradingService,
       RiskManagementCalculator riskManagementCalculator,
-      AccountService<AccountInfo> accountService,
+      AccountService<BinanceAccountInfoFutures> accountService,
       ExchangeInformationServiceFutures exchangeInformationServiceFutures) {
     this.futuresTpslTradingService = futuresTpslTradingService;
     this.riskManagementCalculator = riskManagementCalculator;
@@ -113,8 +114,8 @@ public class TraderFuturesTpslDefault implements TraderFuturesTpsl {
 
   private RiskManagementLimit calculateRiskManagementValues(
       TradingContext tradingContext, TradingClientSettings settings) {
-    AccountInfo accountInfo = accountService.getAccountInfo(settings);
-    BigDecimal availableBalance = accountInfo.getAvailableBalance();
+    AccountInfoFutures accountInfoFutures = accountService.getAccountInfo(settings);
+    BigDecimal availableBalance = accountInfoFutures.getAvailableBalance();
     BigDecimal price = tradingContext.getPrice();
     String ticker = tradingContext.getTicker();
     List<ExchangeInfo> symbolsInformation =

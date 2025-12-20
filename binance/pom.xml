@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.meaivision</groupId>
     <artifactId>crypto-trading-sdk</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
   </parent>
 
   <groupId>com.meaivision.crypto-trading-sdk</groupId>
@@ -17,13 +17,14 @@
   <properties>
     <binance-connector.version>3.4.1</binance-connector.version>
     <binance-futures-connector.version>3.0.5</binance-futures-connector.version>
+    <binance.wallet.version>3.0.0</binance.wallet.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>base</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.4-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.github.binance</groupId>
@@ -34,6 +35,11 @@
       <groupId>io.github.binance</groupId>
       <artifactId>binance-futures-connector-java</artifactId>
       <version>${binance-futures-connector.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.binance</groupId>
+      <artifactId>binance-wallet</artifactId>
+      <version>${binance.wallet.version}</version>
     </dependency>
   </dependencies>
 
