@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @ToString
 @EqualsAndHashCode
-public class AccountInfo {
+public class AccountInfoFutures {
   private BigDecimal availableBalance;
   private BigDecimal totalWalletBalance;
   private BigDecimal totalMarginBalance;

@@ -5,32 +5,27 @@ import com.binance.connector.futures.client.exceptions.BinanceClientException;
 import com.binance.connector.futures.client.exceptions.BinanceConnectorException;
 import com.binance.connector.futures.client.impl.UMFuturesClientImpl;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meaivision.trading.base.model.AccountInfo;
 import com.meaivision.trading.base.model.TradingClientSettings;
 import com.meaivision.trading.base.service.AccountService;
 import com.meaivision.trading.base.service.ClientProvider;
 import com.meaivision.trading.base.util.JsonUtils;
 import com.meaivision.trading.binance.exception.BinanceException;
-import com.meaivision.trading.binance.model.BinanceAccountInfo;
-import com.meaivision.trading.binance.model.mapper.BinanceAccountInfoMapper;
+import com.meaivision.trading.binance.model.BinanceAccountInfoFutures;
 import java.util.LinkedHashMap;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BinanceAccountServiceFutures implements AccountService<AccountInfo> {
+public class BinanceAccountServiceFutures implements AccountService<BinanceAccountInfoFutures> {
 
-  private final BinanceAccountInfoMapper binanceAccountInfoMapper;
   private final ClientProvider<TradingClientSettings, FuturesClient> clientProvider;
 
   public BinanceAccountServiceFutures(
-      BinanceAccountInfoMapper binanceAccountInfoMapper,
       ClientProvider<TradingClientSettings, FuturesClient> clientProvider) {
-    this.binanceAccountInfoMapper = binanceAccountInfoMapper;
     this.clientProvider = clientProvider;
   }
 
   @Override
-  public AccountInfo getAccountInfo(TradingClientSettings settings) {
+  public BinanceAccountInfoFutures getAccountInfo(TradingClientSettings settings) {
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
     UMFuturesClientImpl futuresClient = (UMFuturesClientImpl) clientProvider.get(settings);
     String response = sendRequest(futuresClient, parameters);
@@ -48,10 +43,8 @@ public class BinanceAccountServiceFutures implements AccountService<AccountInfo>
     }
   }
 
-  private AccountInfo toAccountInfo(String result) {
+  private BinanceAccountInfoFutures toAccountInfo(String result) {
     JsonNode jsonNode = JsonUtils.convertToJsonTree(result);
-    BinanceAccountInfo binanceAccountInfo =
-        JsonUtils.convertToObject(jsonNode, BinanceAccountInfo.class);
-    return binanceAccountInfoMapper.toModel(binanceAccountInfo);
+    return JsonUtils.convertToObject(jsonNode, BinanceAccountInfoFutures.class);
   }
 }
