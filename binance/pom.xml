@@ -17,6 +17,7 @@
   <properties>
     <binance-connector.version>3.4.1</binance-connector.version>
     <binance-futures-connector.version>3.0.5</binance-futures-connector.version>
+    <binance.wallet.version>3.0.0</binance.wallet.version>
   </properties>
 
   <dependencies>
@@ -34,6 +35,11 @@
       <groupId>io.github.binance</groupId>
       <artifactId>binance-futures-connector-java</artifactId>
       <version>${binance-futures-connector.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.binance</groupId>
+      <artifactId>binance-wallet</artifactId>
+      <version>${binance.wallet.version}</version>
     </dependency>
   </dependencies>
 
