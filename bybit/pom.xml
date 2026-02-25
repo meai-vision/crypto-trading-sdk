@@ -6,25 +6,31 @@
     <parent>
         <groupId>com.meaivision</groupId>
         <artifactId>crypto-trading-sdk</artifactId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
     <dependencies>
-        <dependency>
-            <groupId>com.meaivision.crypto-trading-sdk</groupId>
-            <artifactId>base</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>io.github.wuhewuhe</groupId>
             <artifactId>bybit-java-api</artifactId>
             <version>1.2.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.meaivision.crypto-trading-sdk</groupId>
+            <artifactId>base</artifactId>
+            <version>0.0.4-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <artifactId>bybit</artifactId>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

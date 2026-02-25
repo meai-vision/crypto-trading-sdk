@@ -1,7 +1,8 @@
 package com.meaivision.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.meaivision.trading.base.model.AccountInfo;
+import com.meaivision.trading.base.model.AccountInfoFutures;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BybitAccountInfo extends AccountInfo {}
+public class BybitAccountInfoFutures extends AccountInfoFutures {
+}
