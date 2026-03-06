@@ -4,11 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.meaivision</groupId>
+        <groupId>com.meaivision.crypto-trading-sdk</groupId>
         <artifactId>crypto-trading-sdk</artifactId>
         <version>0.0.4-SNAPSHOT</version>
     </parent>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.0.15</version>
+        </dependency>
         <dependency>
             <groupId>io.github.wuhewuhe</groupId>
             <artifactId>bybit-java-api</artifactId>

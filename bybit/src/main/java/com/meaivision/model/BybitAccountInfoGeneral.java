@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class BybitAccountInfoGeneral {
 
-    private List<AccountInfoGeneral> wallets;
+  private List<AccountInfoGeneral> wallets;
 }
