@@ -1,34 +1,28 @@
 package com.meaivision.model;
 
-import java.time.Instant;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BybitFuturesOrder {
 
-    private String orderId;
-    private String orderLinkId;
+  @JsonProperty("orderId")
+  private String orderId;
 
-    private String symbol;
-    private String side;
-    private String orderType;
+  @JsonProperty("symbol")
+  private String symbol;
 
-    private String price;
-    private String qty;
-    private String avgPrice;
-    private String cumExecQty;
-    private String cumExecValue;
+  @JsonProperty("side")
+  private String side;
 
-    private String stopOrderType;
-    private String triggerPrice;
-    private String triggerDirection;
+  @JsonProperty("qty")
+  private String qty;
 
-    private String timeInForce;
-    private String orderStatus;
+  @JsonProperty("orderType")
+  private String orderType;
 
-    private Boolean reduceOnly;
-    private Boolean closeOnTrigger;
-
-    private Instant createdTime;
-    private Instant updatedTime;
+  @JsonProperty("updatedTime")
+  private Long updatedTime;
 }
