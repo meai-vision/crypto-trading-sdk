@@ -9,7 +9,7 @@
     <version>0.0.8-SNAPSHOT</version>
   </parent>
 
-  <artifactId>bybit</artifactId>
+  <artifactId>whitebit</artifactId>
 
   <dependencies>
     <dependency>

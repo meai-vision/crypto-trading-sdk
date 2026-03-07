@@ -4,18 +4,18 @@ import com.binance.connector.client.SpotClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meaivision.trading.base.model.AccountInfoGeneral;
 import com.meaivision.trading.base.model.TradingClientSettings;
+import com.meaivision.trading.base.model.WalletHolder;
 import com.meaivision.trading.base.service.AccountService;
 import com.meaivision.trading.base.service.ClientProvider;
 import com.meaivision.trading.base.util.JsonUtils;
 import com.meaivision.trading.binance.exception.BinanceException;
-import com.meaivision.trading.binance.model.BinanceAccountInfoGeneral;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-public class BinanceAccountServiceGeneral implements AccountService<BinanceAccountInfoGeneral> {
+public class BinanceAccountServiceGeneral implements AccountService<WalletHolder> {
 
   private static final String DEFAULT_BINANCE_TICKER = "BTC";
 
@@ -27,7 +27,7 @@ public class BinanceAccountServiceGeneral implements AccountService<BinanceAccou
   }
 
   @Override
-  public BinanceAccountInfoGeneral getAccountInfo(TradingClientSettings settings) {
+  public WalletHolder getAccountInfo(TradingClientSettings settings) {
     LinkedHashMap<String, Object> parameters = new LinkedHashMap<>();
     SpotClient spotClient = clientProvider.get(settings);
     String response = sendRequest(spotClient, parameters);
@@ -38,7 +38,7 @@ public class BinanceAccountServiceGeneral implements AccountService<BinanceAccou
     return spotClient.createWallet().walletBalance(parameters);
   }
 
-  private BinanceAccountInfoGeneral toWallets(String result) {
+  private WalletHolder toWallets(String result) {
     JsonNode jsonNode = JsonUtils.convertToJsonTree(result);
     List<AccountInfoGeneral> wallets =
         StreamSupport.stream(jsonNode.spliterator(), false)
@@ -75,7 +75,7 @@ public class BinanceAccountServiceGeneral implements AccountService<BinanceAccou
                 })
             .filter(Objects::nonNull)
             .toList();
-    BinanceAccountInfoGeneral binanceAccountInfoGeneral = new BinanceAccountInfoGeneral();
+    WalletHolder binanceAccountInfoGeneral = new WalletHolder();
     binanceAccountInfoGeneral.setWallets(wallets);
     return binanceAccountInfoGeneral;
   }

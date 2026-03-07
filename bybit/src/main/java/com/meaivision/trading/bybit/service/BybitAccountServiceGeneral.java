@@ -3,18 +3,20 @@ package com.meaivision.trading.bybit.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meaivision.trading.base.model.AccountInfoGeneral;
 import com.meaivision.trading.base.model.TradingClientSettings;
+import com.meaivision.trading.base.model.WalletHolder;
 import com.meaivision.trading.base.model.enums.WalletType;
 import com.meaivision.trading.base.service.AccountService;
 import com.meaivision.trading.base.util.JsonUtils;
 import com.meaivision.trading.bybit.exception.BybitException;
-import com.meaivision.trading.bybit.model.BybitAccountInfoGeneral;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.stream.Stream;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-public class BybitAccountServiceGeneral implements AccountService<BybitAccountInfoGeneral> {
+public class BybitAccountServiceGeneral implements AccountService<WalletHolder> {
 
   private static final String BASE_URL = "https://api.bybit.com";
   private static final String WALLET_BALANCE_URL = "/v5/account/wallet-balance";
@@ -32,7 +34,7 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
   private final HttpClient httpClient = HttpClient.newHttpClient();
 
   @Override
-  public BybitAccountInfoGeneral getAccountInfo(TradingClientSettings settings) {
+  public WalletHolder getAccountInfo(TradingClientSettings settings) {
     try {
       String unifiedResponse = sendGetRequest(settings, WALLET_BALANCE_URL, "accountType=UNIFIED");
       List<AccountInfoGeneral> unifiedBalances =
@@ -44,7 +46,7 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
 
       List<AccountInfoGeneral> wallets =
           Stream.concat(unifiedBalances.stream(), fundBalances.stream()).toList();
-      BybitAccountInfoGeneral result = new BybitAccountInfoGeneral();
+      WalletHolder result = new WalletHolder();
       result.setWallets(wallets);
       return result;
 
@@ -65,6 +67,7 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
 
     HttpRequest request =
         HttpRequest.newBuilder()
+            .timeout(Duration.of(30, ChronoUnit.SECONDS))
             .uri(URI.create(BASE_URL + endpoint + "?" + queryString))
             .GET()
             .header("X-BAPI-API-KEY", apiKey)
