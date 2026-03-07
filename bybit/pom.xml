@@ -4,10 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.meaivision.crypto-trading-sdk</groupId>
+        <groupId>com.meaivision</groupId>
         <artifactId>crypto-trading-sdk</artifactId>
         <version>0.0.4-SNAPSHOT</version>
     </parent>
+
+    <groupId>com.meaivision.crypto-trading-sdk</groupId>
+    <artifactId>bybit</artifactId>
+    <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -26,14 +31,6 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-    <artifactId>bybit</artifactId>
-
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
