@@ -2,5 +2,6 @@ package com.meaivision.trading.base.model.enums;
 
 public enum WalletType {
   UNIFIED,
-  FUND
+  FUND,
+  COLLATERAL
 }
