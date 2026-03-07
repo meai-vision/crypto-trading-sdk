@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-public class BinanceAccountServiceSpot implements AccountService<BinanceAccountInfoGeneral> {
+public class BinanceAccountServiceGeneral implements AccountService<BinanceAccountInfoGeneral> {
 
   private final ClientProvider<TradingClientSettings, SpotClient> clientProvider;
 
-  public BinanceAccountServiceSpot(
+  public BinanceAccountServiceGeneral(
       ClientProvider<TradingClientSettings, SpotClient> clientProvider) {
     this.clientProvider = clientProvider;
   }

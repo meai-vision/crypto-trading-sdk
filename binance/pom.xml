@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.meaivision</groupId>
     <artifactId>crypto-trading-sdk</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
   </parent>
 
   <groupId>com.meaivision.crypto-trading-sdk</groupId>
@@ -24,7 +24,7 @@
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>base</artifactId>
-      <version>0.0.5-SNAPSHOT</version>
+      <version>0.0.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.github.binance</groupId>
