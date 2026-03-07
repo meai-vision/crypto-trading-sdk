@@ -3,6 +3,7 @@ package com.meaivision.trading.bybit.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meaivision.trading.base.model.AccountInfoGeneral;
 import com.meaivision.trading.base.model.TradingClientSettings;
+import com.meaivision.trading.base.model.enums.WalletType;
 import com.meaivision.trading.base.service.AccountService;
 import com.meaivision.trading.base.util.JsonUtils;
 import com.meaivision.trading.bybit.exception.BybitException;
@@ -15,11 +16,9 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HexFormat;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -36,30 +35,17 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
   public BybitAccountInfoGeneral getAccountInfo(TradingClientSettings settings) {
     try {
       String unifiedResponse = sendGetRequest(settings, WALLET_BALANCE_URL, "accountType=UNIFIED");
-      List<AccountInfoGeneral> unifiedBalances = parseWallets(unifiedResponse);
+      List<AccountInfoGeneral> unifiedBalances =
+          parseWallets(WalletType.UNIFIED.name(), unifiedResponse);
 
       String fundResponse = sendGetRequest(settings, ALL_COINS_BALANCE_URL, "accountType=FUND");
-      List<AccountInfoGeneral> fundBalances = parseAllCoinsWallets(fundResponse);
+      List<AccountInfoGeneral> fundBalances =
+          parseAllCoinsWallets(WalletType.FUND.name(), fundResponse);
 
-      Map<String, BigDecimal> mergedBalances = new HashMap<>();
-
-      unifiedBalances.forEach(
-          b -> mergedBalances.merge(b.getWallet(), b.getTotal(), BigDecimal::add));
-      fundBalances.forEach(b -> mergedBalances.merge(b.getWallet(), b.getTotal(), BigDecimal::add));
-
-      List<AccountInfoGeneral> finalWallets =
-          mergedBalances.entrySet().stream()
-              .map(
-                  entry -> {
-                    AccountInfoGeneral info = new AccountInfoGeneral();
-                    info.setWallet(entry.getKey());
-                    info.setTotal(entry.getValue());
-                    return info;
-                  })
-              .collect(Collectors.toList());
-
+      List<AccountInfoGeneral> wallets =
+          Stream.concat(unifiedBalances.stream(), fundBalances.stream()).toList();
       BybitAccountInfoGeneral result = new BybitAccountInfoGeneral();
-      result.setWallets(finalWallets);
+      result.setWallets(wallets);
       return result;
 
     } catch (Exception e) {
@@ -101,7 +87,7 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
     return HexFormat.of().formatHex(hash);
   }
 
-  private List<AccountInfoGeneral> parseWallets(String jsonBody) {
+  private List<AccountInfoGeneral> parseWallets(String wallet, String jsonBody) {
     List<AccountInfoGeneral> balances = new ArrayList<>();
     JsonNode rootNode = JsonUtils.convertToJsonTree(jsonBody);
 
@@ -116,7 +102,8 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
       if (coinArray.isArray()) {
         for (JsonNode coinNode : coinArray) {
           AccountInfoGeneral info = new AccountInfoGeneral();
-          info.setWallet(coinNode.path("coin").asText());
+          info.setWallet(wallet);
+          info.setTicker(coinNode.path("coin").asText());
           info.setTotal(new BigDecimal(coinNode.path("walletBalance").asText()));
           balances.add(info);
         }
@@ -125,7 +112,7 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
     return balances;
   }
 
-  private List<AccountInfoGeneral> parseAllCoinsWallets(String jsonBody) {
+  private List<AccountInfoGeneral> parseAllCoinsWallets(String wallet, String jsonBody) {
     List<AccountInfoGeneral> balances = new ArrayList<>();
     JsonNode rootNode = JsonUtils.convertToJsonTree(jsonBody);
 
@@ -138,7 +125,8 @@ public class BybitAccountServiceGeneral implements AccountService<BybitAccountIn
     if (balanceArray.isArray()) {
       for (JsonNode coinNode : balanceArray) {
         AccountInfoGeneral info = new AccountInfoGeneral();
-        info.setWallet(coinNode.path("coin").asText());
+        info.setWallet(wallet);
+        info.setTicker(coinNode.path("coin").asText());
         info.setTotal(new BigDecimal(coinNode.path("walletBalance").asText()));
         balances.add(info);
       }

@@ -17,6 +17,8 @@ import java.util.stream.StreamSupport;
 
 public class BinanceAccountServiceGeneral implements AccountService<BinanceAccountInfoGeneral> {
 
+  private static final String DEFAULT_BINANCE_TICKER = "BTC";
+
   private final ClientProvider<TradingClientSettings, SpotClient> clientProvider;
 
   public BinanceAccountServiceGeneral(
@@ -60,6 +62,7 @@ public class BinanceAccountServiceGeneral implements AccountService<BinanceAccou
                   }
                   String name = walletNameNode.textValue();
                   accountInfoGeneral.setWallet(name);
+                  accountInfoGeneral.setTicker(DEFAULT_BINANCE_TICKER);
                   JsonNode balanceNode = walletNode.get("balance");
                   if (balanceNode == null) {
                     throw new BinanceException(
