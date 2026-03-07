@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 public class AccountInfoGeneral {
   private String wallet;
+  private String ticker;
   private BigDecimal total;
 }
