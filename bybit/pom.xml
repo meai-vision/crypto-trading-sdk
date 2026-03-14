@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.meaivision</groupId>
     <artifactId>crypto-trading-sdk</artifactId>
-    <version>0.0.11-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <groupId>com.meaivision.crypto-trading-sdk</groupId>
@@ -17,7 +17,7 @@
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>base</artifactId>
-      <version>0.0.11-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
   </dependencies>
 
