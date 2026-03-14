@@ -9,7 +9,9 @@
     <version>0.0.10-SNAPSHOT</version>
   </parent>
 
+  <groupId>com.meaivision.crypto-trading-sdk</groupId>
   <artifactId>bybit</artifactId>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
