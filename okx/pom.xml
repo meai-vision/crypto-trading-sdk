@@ -13,6 +13,9 @@
   <artifactId>okx</artifactId>
   <packaging>jar</packaging>
 
+  <name>Crypto Trading SDK - OKX</name>
+  <description>OKX exchange integration for MEAI Crypto Trading SDK</description>
+
   <dependencies>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>

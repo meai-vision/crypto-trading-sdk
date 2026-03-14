@@ -14,6 +14,9 @@
   <artifactId>base</artifactId>
   <packaging>jar</packaging>
 
+  <name>Crypto Trading SDK - Base</name>
+  <description>Core of the trading SDK containing all necessary interfaces and models</description>
+
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

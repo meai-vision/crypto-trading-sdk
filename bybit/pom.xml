@@ -13,6 +13,9 @@
   <artifactId>bybit</artifactId>
   <packaging>jar</packaging>
 
+  <name>Crypto Trading SDK - Bybit</name>
+  <description>Bybit exchange integration for MEAI Crypto Trading SDK</description>
+
   <dependencies>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
