@@ -6,16 +6,18 @@
   <parent>
     <groupId>com.meaivision</groupId>
     <artifactId>crypto-trading-sdk</artifactId>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>0.0.10-SNAPSHOT</version>
   </parent>
 
+  <groupId>com.meaivision.crypto-trading-sdk</groupId>
   <artifactId>bybit</artifactId>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>base</artifactId>
-      <version>0.0.9-SNAPSHOT</version>
+      <version>0.0.10-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
