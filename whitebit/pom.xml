@@ -6,18 +6,21 @@
   <parent>
     <groupId>com.meaivision</groupId>
     <artifactId>crypto-trading-sdk</artifactId>
-    <version>0.0.11-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <groupId>com.meaivision.crypto-trading-sdk</groupId>
   <artifactId>whitebit</artifactId>
   <packaging>jar</packaging>
 
+  <name>Crypto Trading SDK - WhiteBit</name>
+  <description>WhiteBit exchange integration for MEAI Crypto Trading SDK</description>
+
   <dependencies>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>base</artifactId>
-      <version>0.0.11-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
   </dependencies>
 

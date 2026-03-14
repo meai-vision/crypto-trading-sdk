@@ -7,12 +7,15 @@
   <parent>
     <groupId>com.meaivision</groupId>
     <artifactId>crypto-trading-sdk</artifactId>
-    <version>0.0.11-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <groupId>com.meaivision.crypto-trading-sdk</groupId>
   <artifactId>api</artifactId>
   <packaging>jar</packaging>
+
+  <name>Crypto Trading SDK - API</name>
+  <description>Central API for trading SDK operating</description>
 
   <properties>
     <maven.compiler.source>21</maven.compiler.source>
@@ -24,22 +27,22 @@
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>binance</artifactId>
-      <version>0.0.11-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>bybit</artifactId>
-      <version>0.0.11-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>whitebit</artifactId>
-      <version>0.0.11-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.meaivision.crypto-trading-sdk</groupId>
       <artifactId>okx</artifactId>
-      <version>0.0.11-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
   </dependencies>
 
